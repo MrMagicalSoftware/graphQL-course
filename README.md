@@ -42,6 +42,53 @@ In questo modo si può evitare di dover fare più round-trip al server per otten
 
 _____________________
 
+In GRAPHQL abbiamo un singolo endpoint ( es : mysite.com/graphql
+
+Esempio di Query :
+
+```
+Query {
+  courses {
+    id ,
+    title,
+    thumbnail_url
+  }
+
+}
+```
+
+```
+
+Query {
+  course(id : "1" ) {
+    id,
+    title,
+    thumbnail_url,
+    author {
+      name,
+      id,
+      courses {
+        id,
+        title,
+        thumbnail_url
+      }
+    }
+  }
+}
+```
+
+
+# Query Basics 
+
+
+
+
+
+
+
+
+
+
 
 
 
