@@ -82,7 +82,56 @@ Query {
 
 
 
+In GraphQL, una **query** è il modo principale con cui i client richiedono dati da un server. Le query GraphQL sono strutturate in modo che il client possa chiedere esattamente le informazioni di cui ha bisogno, niente di più e niente di meno. Ciò permette un controllo preciso sui dati ricevuti, migliorando l'efficienza.
 
+### Struttura di una Query di Base
+
+Una query di base in GraphQL ha questa struttura:
+1. **Nome del campo**: Indica quale dato si vuole ottenere.
+2. **Argomenti (facoltativi)**: Parametri che possono essere passati per filtrare o modificare i risultati.
+3. **Selezione dei campi**: Definisce quali campi specifici all'interno di un'entità devono essere restituiti.
+
+#### Esempio:
+
+```graphql
+{
+  user(id: 1) {
+    name
+    email
+    posts {
+      title
+      content
+    }
+  }
+}
+```
+
+### Cosa Succede in Questo Esempio:
+- La query chiede i dati di un utente con `id: 1`.
+- Vuole i campi `name` e `email` dell'utente.
+- Inoltre, chiede i **post** associati a quell'utente, ma solo i campi `title` e `content` di ogni post.
+
+### Componenti di Base di una Query GraphQL
+
+1. **Root Field (Campo Radice)**: Ogni query parte con un campo radice. In questo caso, `user` è il campo radice, e il server capirà che deve cercare un utente nel database.
+   
+2. **Argomenti**: Alcuni campi possono accettare argomenti. In questo esempio, l'argomento `id: 1` specifica quale utente viene richiesto. Gli argomenti possono essere facoltativi o obbligatori, a seconda di come è stato definito lo schema.
+
+3. **Selezione dei Campi**: GraphQL consente di specificare esattamente quali campi restituire. Invece di restituire tutte le informazioni dell'utente, la query richiede solo `name` ed `email`, e questo evita di ottenere dati non necessari.
+
+4. **Nested Queries (Query Nidificate)**: GraphQL consente di richiedere dati correlati all'interno della stessa query. In questo esempio, oltre ai dati dell'utente, vengono richiesti anche i **post** dell'utente con i campi `title` e `content`.
+
+### Vantaggi delle Query in GraphQL
+- **Evita l'over-fetching e l'under-fetching**: Ottieni solo i dati richiesti, senza dati in eccesso (over-fetching) o insufficienti (under-fetching).
+- **Richieste flessibili**: Puoi ottenere dati complessi e correlati con una sola richiesta.
+- **Efficiente**: Riduce il numero di chiamate al server rispetto alle API REST, poiché consente di ottenere dati nidificati con una singola query.
+
+### Altri Elementi delle Query GraphQL
+- **Alias**: Permettono di rinominare i campi nella risposta.
+- **Variabili**: Parametri dinamici che puoi passare nella query per rendere il codice più flessibile.
+- **Frammenti**: Parti di query riutilizzabili, ideali per evitare la duplicazione del codice.
+
+GraphQL offre un modo più potente e flessibile per richiedere dati rispetto alle tradizionali API REST, adattando la richiesta esattamente ai bisogni del client.
 
 
 
