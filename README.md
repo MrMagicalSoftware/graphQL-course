@@ -133,6 +133,25 @@ Una query di base in GraphQL ha questa struttura:
 
 GraphQL offre un modo più potente e flessibile per richiedere dati rispetto alle tradizionali API REST, adattando la richiesta esattamente ai bisogni del client.
 
+______________________________________
+
+# Making a Graphql Server
+
+(apollo server )
+
+
+https://www.apollographql.com/docs/apollo-server/
+
+![Screenshot 2024-09-10 alle 11 12 58](https://github.com/user-attachments/assets/b9c898b6-ac0c-4549-a5bd-f96cdf3d239c)
+
+
+![Screenshot 2024-09-10 alle 11 13 08](https://github.com/user-attachments/assets/ca73a8d0-1de9-4972-b3b6-42f2493269a5)
+
+
+
+
+
+
 
 
 
