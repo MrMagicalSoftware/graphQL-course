@@ -302,6 +302,192 @@ In questo esempio:
 - I **tipi** definiscono i dati che possono essere richiesti o inviati, fornendo una descrizione chiara delle entità e delle loro relazioni.
 
 
+______________________________
+
+
+# RESOLVER
+
+
+In GraphQL, le **resolver functions** (funzioni resolver) sono il motore che alimenta le query e le mutazioni. Un **resolver** è una funzione responsabile di fornire i dati per un campo specifico nel tipo GraphQL. Quando un client esegue una query, ogni campo nella query corrisponde a un resolver che recupera i dati associati e li restituisce.
+
+### Come Funzionano i Resolver
+Ogni volta che un campo viene richiesto in una query GraphQL, il server chiama la funzione resolver associata a quel campo per ottenere il valore da restituire. Se un campo non ha un resolver esplicito, GraphQL applica un resolver predefinito che restituisce semplicemente il valore di un oggetto restituito dal livello precedente (come una proprietà dell'oggetto).
+
+#### Sintassi di base di un Resolver
+
+Un resolver è una funzione che segue questa forma:
+
+```js
+(field, args, context, info) => {
+  // Logica per recuperare i dati
+}
+```
+
+I parametri di una funzione resolver sono:
+
+1. **field (parent/root)**: L'oggetto genitore o radice. Se il campo è un campo del tipo radice `Query` o `Mutation`, questo valore sarà `undefined`. Se è un campo figlio, sarà l'oggetto che contiene il campo genitore.
+   
+2. **args**: Gli argomenti passati nella query per quel campo. Se il campo non accetta argomenti, questo sarà un oggetto vuoto.
+
+3. **context**: Un oggetto che contiene informazioni condivise, come autenticazione, database o sessioni. Viene passato a tutti i resolver e può essere usato per condividere dati globali tra loro.
+
+4. **info**: Informazioni sull'esecuzione della query, come lo schema e il percorso del campo. Viene usato raramente.
+
+### Esempio di Resolver
+
+Supponiamo di avere uno schema che definisce una query `user` che accetta un `id` come argomento e restituisce un oggetto `User`.
+
+**Schema GraphQL:**
+
+```graphql
+type Query {
+  user(id: ID!): User
+}
+
+type User {
+  id: ID!
+  name: String!
+  email: String!
+}
+```
+
+Ora definiamo il resolver per la query `user` che recupera i dati da un database (o un'altra fonte).
+
+**Resolver:**
+
+```js
+const resolvers = {
+  Query: {
+    user: (parent, args, context, info) => {
+      // Recuperiamo l'utente dall'argomento `id`
+      const { id } = args;
+      // Simuliamo il recupero da un database
+      return context.db.users.find(user => user.id === id);
+    }
+  },
+  // Resolver per i campi del tipo `User`
+  User: {
+    email: (parent, args, context, info) => {
+      // Il resolver predefinito restituirebbe `parent.email` automaticamente,
+      // ma possiamo personalizzarlo. Ad esempio, potremmo voler nascondere
+      // l'email per alcuni utenti non autenticati:
+      if (context.user.isAuthenticated) {
+        return parent.email;
+      }
+      return null; // Nasconde l'email se l'utente non è autenticato
+    }
+  }
+};
+```
+
+### Spiegazione dell'Esempio
+1. **Query.user**: 
+   - Questo resolver viene chiamato quando il client esegue una query come `user(id: "1")`.
+   - Usa l'argomento `id` passato nella query per cercare l'utente corrispondente in un database simulato (in questo caso, una lista di utenti in `context.db.users`).
+
+2. **User.email**:
+   - Questo è un resolver per il campo `email` del tipo `User`.
+   - Si accede al campo `email` dall'oggetto genitore (`parent.email`), ma si aggiunge una logica che verifica se l'utente è autenticato (`context.user.isAuthenticated`). Se l'utente non è autenticato, nasconde l'indirizzo email.
+
+### Resolver Predefiniti
+GraphQL fornisce resolver predefiniti per i campi. Se non definisci un resolver personalizzato per un campo, GraphQL userà un resolver predefinito che cerca semplicemente il campo nell'oggetto genitore.
+
+Ad esempio, se hai il seguente schema:
+
+```graphql
+type Query {
+  user: User
+}
+
+type User {
+  name: String
+  email: String
+}
+```
+
+E supponiamo che la query `user` restituisca questo oggetto:
+
+```js
+{
+  name: "Mario",
+  email: "mario@example.com"
+}
+```
+
+Se non definisci un resolver esplicito per i campi `name` ed `email`, GraphQL chiamerà i resolver predefiniti, che restituiranno rispettivamente `parent.name` e `parent.email`.
+
+### Resolver per Mutazioni
+Anche le mutazioni utilizzano i resolver per gestire le operazioni di creazione, aggiornamento o eliminazione dei dati.
+
+Esempio di una mutazione per creare un utente:
+
+**Schema:**
+
+```graphql
+type Mutation {
+  createUser(name: String!, email: String!): User
+}
+
+type User {
+  id: ID!
+  name: String!
+  email: String!
+}
+```
+
+**Resolver per la Mutazione:**
+
+```js
+const resolvers = {
+  Mutation: {
+    createUser: (parent, args, context) => {
+      const newUser = {
+        id: Date.now().toString(),
+        name: args.name,
+        email: args.email,
+      };
+      context.db.users.push(newUser); // Salva l'utente in un database simulato
+      return newUser;
+    }
+  }
+};
+```
+
+### In sintesi :
+- I **resolver** sono funzioni che forniscono i dati per i campi definiti nello schema GraphQL.
+- Ogni campo, sia nelle **query** che nelle **mutazioni**, ha bisogno di un resolver, ma se non ne fornisci uno, GraphQL usa un resolver predefinito che restituisce i dati dall'oggetto genitore.
+- I resolver ricevono quattro parametri: `parent`, `args`, `context` e `info`.
+- Il **context** viene usato per condividere informazioni globali come l'utente autenticato o l'accesso al database.
+  
+I resolver sono fondamentali per collegare lo schema GraphQL al backend, fornendo la logica per il recupero o la modifica dei dati.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
