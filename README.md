@@ -1,5 +1,13 @@
 # graphQL-course
 
+
+In visual studio code installare :
+
+
+![Screenshot 2024-09-10 alle 11 37 25](https://github.com/user-attachments/assets/d4dd69dc-63fa-4c45-b091-4e3be267c1a4)
+
+
+
 # What is GraphQL ?
 
 -graphQl is a Query Language.
