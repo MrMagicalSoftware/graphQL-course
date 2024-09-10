@@ -149,7 +149,150 @@ https://www.apollographql.com/docs/apollo-server/
 
 
 
+________________________
 
+# Schema e types
+
+
+In GraphQL, lo **schema** e i **types** (tipi) sono concetti fondamentali che definiscono la struttura dei dati disponibili per le query e mutazioni. Essi stabiliscono quali tipi di operazioni possono essere eseguite e quali dati possono essere richiesti o modificati.
+
+### 1. **Schema**
+Lo **schema** è il cuore di ogni server GraphQL. Esso descrive le operazioni disponibili (query, mutazioni e, opzionalmente, subscription) e specifica i tipi di dati che il client può richiedere o inviare. In pratica, è un contratto tra il server e i client che lo utilizzano.
+
+Uno schema in GraphQL viene definito utilizzando il **GraphQL Schema Definition Language (SDL)**, che è molto leggibile e simile a un linguaggio di dichiarazione.
+
+#### Esempio di schema base:
+
+```graphql
+schema {
+  query: Query
+  mutation: Mutation
+}
+```
+
+- **Query**: È il tipo principale che definisce come leggere i dati.
+- **Mutation**: È il tipo che definisce come modificare (creare, aggiornare o cancellare) i dati.
+
+### 2. **Types (Tipi)**
+I **tipi** in GraphQL sono le definizioni delle strutture dei dati disponibili all'interno del sistema. Possono essere pensati come classi o modelli che descrivono come un dato specifico deve essere formato e quali campi (proprietà) contiene. 
+
+Ci sono vari tipi principali:
+
+#### a. **Tipi scalari**
+Questi sono i tipi primitivi (valori atomici) in GraphQL. Alcuni tipi scalari predefiniti sono:
+- `String`: Una sequenza di caratteri.
+- `Int`: Un numero intero.
+- `Float`: Un numero a virgola mobile.
+- `Boolean`: Un valore booleano (true o false).
+- `ID`: Un identificatore unico (solitamente usato per identificare oggetti).
+
+Esempio di definizione di un tipo scalare in un campo di una query:
+
+```graphql
+type Query {
+  hello: String
+}
+```
+
+Qui il tipo `hello` è una stringa (`String`), quindi quando viene eseguita la query, il campo `hello` restituirà una stringa.
+
+#### b. **Object types (Tipi di oggetto)**
+I tipi di oggetto sono i tipi principali usati per rappresentare entità complesse con campi multipli.
+
+Esempio di un tipo di oggetto:
+
+```graphql
+type User {
+  id: ID!
+  name: String!
+  email: String!
+}
+```
+
+Qui, `User` è un tipo di oggetto che ha tre campi: `id` (di tipo `ID`), `name` (di tipo `String`) ed `email` (di tipo `String`). Il punto esclamativo (`!`) indica che quel campo è **non nullo**, cioè deve sempre avere un valore.
+
+#### c. **Input types (Tipi di input)**
+I tipi di input vengono usati per passare dati durante una mutazione. Funzionano in modo simile ai tipi di oggetto, ma non possono includere campi nidificati o complessi, perché servono solo per passare dati da usare all'interno delle operazioni.
+
+Esempio di tipo di input:
+
+```graphql
+input CreateUserInput {
+  name: String!
+  email: String!
+}
+```
+
+Questo tipo di input può essere usato per passare dati a una mutazione per creare un nuovo utente.
+
+#### d. **Enum types (Tipi enumerativi)**
+I tipi enumerativi limitano i valori che un campo può assumere a una lista predefinita.
+
+Esempio di tipo enumerativo:
+
+```graphql
+enum Role {
+  ADMIN
+  USER
+  GUEST
+}
+```
+
+Questo tipo `Role` definisce tre valori: `ADMIN`, `USER`, e `GUEST`. Un campo che usa questo tipo potrà avere solo uno di questi valori.
+
+#### e. **List types (Tipi di lista)**
+In GraphQL, puoi definire campi che restituiscono una lista di un certo tipo.
+
+Esempio:
+
+```graphql
+type Query {
+  users: [User]!
+}
+```
+
+Qui, il campo `users` restituirà una lista di oggetti `User`.
+
+### 3. **Unione tra schema e types**
+Lo schema unisce tutte le definizioni di tipi e definisce come devono essere utilizzate nelle query e mutazioni. 
+
+Esempio di uno schema completo:
+
+```graphql
+# Definiamo un tipo User
+type User {
+  id: ID!
+  name: String!
+  email: String!
+}
+
+# Definiamo le query disponibili
+type Query {
+  users: [User]!
+  user(id: ID!): User
+}
+
+# Definiamo un input per le mutazioni
+input CreateUserInput {
+  name: String!
+  email: String!
+}
+
+# Definiamo le mutazioni disponibili
+type Mutation {
+  createUser(input: CreateUserInput!): User!
+}
+```
+
+In questo esempio:
+- La query `users` restituisce una lista di utenti.
+- La query `user` restituisce un singolo utente in base al suo `id`.
+- La mutazione `createUser` crea un nuovo utente utilizzando i dati forniti attraverso il tipo di input `CreateUserInput`.
+
+### Conclusione
+In sintesi:
+- Lo **schema** definisce la struttura generale dell'API GraphQL, includendo i tipi e le operazioni possibili (query, mutazioni).
+- I **tipi** definiscono i dati che possono essere richiesti o inviati, fornendo una descrizione chiara delle entità e delle loro relazioni.
 
 
 
