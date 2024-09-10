@@ -297,7 +297,7 @@ In questo esempio:
 - La query `user` restituisce un singolo utente in base al suo `id`.
 - La mutazione `createUser` crea un nuovo utente utilizzando i dati forniti attraverso il tipo di input `CreateUserInput`.
 
-### Riassumento
+### Riassumendo
 - Lo **schema** definisce la struttura generale dell'API GraphQL, includendo i tipi e le operazioni possibili (query, mutazioni).
 - I **tipi** definiscono i dati che possono essere richiesti o inviati, fornendo una descrizione chiara delle entità e delle loro relazioni.
 
